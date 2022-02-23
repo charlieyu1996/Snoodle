@@ -304,7 +304,58 @@
       gumStream.getAudioTracks()[0].stop();
 
       //create the wav blob and pass it on to createDownloadLink
-      rec.exportWAV(createDownloadLink);
+      //rec.exportWAV(createDownloadLink);
+
+      rec.exportWAV(uploadAudio);
+    }
+
+
+    function uploadAudio(blob){
+      var url = URL.createObjectURL(blob);
+      var li = document.createElement('li');
+
+      var xhr = new XMLHttpRequest();
+        xhr.onload = function (e) {
+          if (this.readyState === 4) {
+            console.log("Server returned: ", e.target.responseText);
+            returnURL = new URL(this.responseURL);
+            queryString = returnURL.search;
+            urlParams = new URLSearchParams(queryString);
+            eventSummary = urlParams.get('eventSummary');
+            emailList = urlParams.get('emailList');
+            startDate = urlParams.get('startDate');
+            endDate = urlParams.get('endDate');
+            startTime = urlParams.get('startTime');
+            endTime = urlParams.get('endTime');
+            location2 = urlParams.get('location');
+            if (eventSummary != null && eventSummary.length > 0) {
+              $("#eventSummary").val(eventSummary);
+            }
+            if (emailList != null && emailList.length > 0) {
+              $("#emailList").val(emailList);
+            }
+            if (startDate != null && startDate.length > 0) {
+              $("#startDate").val(startDate);
+            }
+            if (endDate != null && endDate.length > 0) {
+              $("#endDate").val(endDate);
+            }
+            if (startTime != null && startTime.length > 0) {
+              $("#startTime").val(startTime);
+            }
+            if (endTime != null && endTime.length > 0) {
+              $("#endTime").val(endTime);
+            }
+            if (location2 != null && location2.length > 0) {
+              $("#location").val(location2);
+            }
+          }
+        };
+        var fd = new FormData();
+        fd.append("audio_data", blob, "webVoice");
+        fd.append("file_path", url);
+        xhr.open("POST", "/postRecord", true);
+        xhr.send(fd);
     }
 
     function createDownloadLink(blob) {
