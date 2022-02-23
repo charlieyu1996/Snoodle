@@ -116,12 +116,18 @@
         <h5 class="card-title" th:text="${m.eventSummary}">Event Name</h5>
         <h6 class="card-subtitle mb-2 text-muted"
           th:text="${T(cloudcode.guestbook.frontend.PrintDuration).print(m.createDate)}">Create Date</h6>
-        <br>
+        <br><br>
+        <h7>Email List</h7>
         <p class="card-text" th:text="${m.emailList}">Email List</p>
+        <h7>Start Date</h7>
         <p class="card-text" th:text="${m.startDate}">Start Date</p>
+        <h7>End Date</h7>
         <p class="card-text" th:text="${m.endDate}">End Date</p>
+        <h7>Start Time</h7>
         <p class="card-text" th:text="${m.startTime}">Start Time</p>
+        <h7>End Time</h7>
         <p class="card-text" th:text="${m.endTime}">End Time</p>
+        <h7>Location</h7>
         <p class="card-text" th:text="${m.location}">Location</p>
         <a th:href="${m.eventLink}" target="_blank" rel="noopener noreferrer">Add to my calendar</a>
       </div>
