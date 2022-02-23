@@ -27,7 +27,7 @@ public class BackendController {
 
    @Autowired private MessageRepository repository;
 
-    private EventRepository eventRepository;
+   @Autowired private EventRepository eventRepository;
 
     BackendController(EventRepository eventRepository) {
         this.eventRepository = eventRepository;
@@ -39,10 +39,11 @@ public class BackendController {
     }
 
     @PostMapping("/messages2")
-    public String createOrder(@RequestBody CalendarEntry event) {
+    public String createEvent(@RequestBody CalendarEntry event) {
             // Spanner currently does not auto generate IDs
             // Generate UUID on new orders
             event.setId(UUID.randomUUID().toString());
+            event.setCreateDate(Long.toString(System.currentTimeMillis()));
       CalendarEntry saved = eventRepository.save(event);
       return saved.getId();
     }
@@ -52,9 +53,9 @@ public class BackendController {
      * @return a list of GuestBookEntry objects
      */
     @GetMapping("/messages")
-    public final List<CalendarEntry> getMessages() {
+    public final List<CalendarEntry3> getMessages() {
         Sort byCreation = Sort.by(Sort.Direction.DESC, "_id");
-        List<CalendarEntry> msgList = repository.findAll(byCreation);
+        List<CalendarEntry3> msgList = repository.findAll(byCreation);
         return msgList;
     }
 
@@ -63,7 +64,7 @@ public class BackendController {
      * @param message a message object passed in the HTTP POST request
      */
     @PostMapping("/messages")
-    public final void addMessage(@RequestBody CalendarEntry message) {
+    public final void addMessage(@RequestBody CalendarEntry3 message) {
         message.setCreateDate(System.currentTimeMillis());
         repository.save(message);
     }

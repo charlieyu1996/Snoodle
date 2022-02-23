@@ -9,26 +9,15 @@ import com.google.cloud.spring.data.spanner.core.mapping.Table;
 /**
  * defines the data associated with a single guest book entry
  */
-@Table(name = "Events")
-@Data
-public class CalendarEntry2 {
-    @PrimaryKey
-    @Column(name="EventId")
-    private String id; // test
+public class CalendarEntry3 {
+    private String id;
 
-    @Column(name="EventSummary")
     private String eventSummary;
-    @Column(name="EmailList")
     private String emailList;
-    @Column(name="StartDate")
     private String startDate;
-    @Column(name="EndDate")
     private String endDate;
-    @Column(name="StartTime")
     private String startTime;
-    @Column(name="EndTime")
     private String endTime;
-    @Column(name="Location")
     private String location;
 
     private String eventLink;

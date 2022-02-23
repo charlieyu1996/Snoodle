@@ -6,4 +6,4 @@ import org.springframework.data.mongodb.repository.MongoRepository;
  * represents a custom Mongo repository that stores GuestBookEntry objects
  */
 public interface MessageRepository extends
-    MongoRepository<CalendarEntry, String> { }
+    MongoRepository<CalendarEntry3, String> { }
