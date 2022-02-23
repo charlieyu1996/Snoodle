@@ -1,3 +1,8 @@
+.input-group,
+.custom-select {
+  width: 50%;
+}
+
 body {
     font-family: 'Roboto', sans-serif;
     background: #f8f9fa;
