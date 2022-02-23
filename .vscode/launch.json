@@ -1,0 +1,48 @@
+// launch.json contains information needed for the debugger to attach to  processes
+// See https://code.visualstudio.com/Docs/editor/debugging#_launch-configurations
+// for documentation about how to create and manage configurations
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Launch DemoApplication",
+      "request": "launch",
+      "mainClass": "cloudcode.guestbook.backend.DemoApplication",
+      "projectName": "backend"
+    },
+    {
+      "type": "java",
+      "name": "Launch SpeechToText",
+      "request": "launch",
+      "mainClass": "cloudcode.guestbook.backend.SpeechToText",
+      "projectName": "backend"
+    },
+    {
+      "type": "java",
+      "name": "Launch CloudStorage",
+      "request": "launch",
+      "mainClass": "cloudcode.guestbook.backend.CloudStorage",
+      "projectName": "backend"
+    },
+    {
+      "type": "java",
+      "name": "Launch Recognize",
+      "request": "launch",
+      "mainClass": "cloudcode.guestbook.frontend.Recognize",
+      "projectName": "frontend"
+    },
+    {
+      "name": "Run on Kubernetes",
+      "type": "cloudcode.kubernetes",
+      "request": "launch",
+      "skaffoldConfig": "${workspaceFolder}/skaffold.yaml",
+      "watch": true,
+      "cleanUp": false,
+      "portForward": true,
+      "internalConsoleOptions": "neverOpen",
+      "imageRegistry": "gcr.io/charliyu-demo",
+      "noDebug": true
+    }
+  ]
+}
