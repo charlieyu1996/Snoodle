@@ -14,7 +14,7 @@ import com.google.cloud.spring.data.spanner.core.mapping.Table;
 public class CalendarEntry2 {
     @PrimaryKey
     @Column(name="EventId")
-    private String id;
+    private String id; // test
 
     @Column(name="EventSummary")
     private String eventSummary;
