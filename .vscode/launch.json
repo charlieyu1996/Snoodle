@@ -6,6 +6,13 @@
   "configurations": [
     {
       "type": "java",
+      "name": "Launch BackendApplication",
+      "request": "launch",
+      "mainClass": "cloudcode.guestbook.backend.BackendApplication",
+      "projectName": "backend"
+    },
+    {
+      "type": "java",
       "name": "Launch DemoApplication",
       "request": "launch",
       "mainClass": "cloudcode.guestbook.backend.DemoApplication",

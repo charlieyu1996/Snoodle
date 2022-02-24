@@ -91,6 +91,14 @@
         </div>
         <input type="text" class="form-control" id="location" name="location" placeholder="Waterloo, Ontario" required>
       </div>
+
+      <label class="sr-only" for="eventDetails">eventDetails</label>
+      <div class="input-group mb-2 mr-sm-2">
+        <div class="input-group-prepend">
+          <div class="input-group-text">Event Details</div>
+        </div>
+        <textarea type="text" class="form-control" id="eventDetails" name="eventDetails" placeholder="e.g. Bring a tent, first aid, etc."></textarea>
+      </div>
       <button type="submit" class="btn btn-primary mb-2">Create Event</button>
     </form>
 
@@ -129,6 +137,8 @@
         <p class="card-text" th:text="${m.endTime}">End Time</p>
         <h7>Location</h7>
         <p class="card-text" th:text="${m.location}">Location</p>
+        <h7 th:if="${m.eventDetails!=null}">Event Details</h7>
+        <p class="card-text" th:text="${m.eventDetails}">Event Details</p>
         <a th:href="${m.eventLink}" target="_blank" rel="noopener noreferrer">Add to my calendar</a>
       </div>
     </div>
@@ -184,6 +194,7 @@
         var startTime = $(this).find('p').eq(3).text();
         var endTime = $(this).find('p').eq(4).text();
         var location = $(this).find('p').eq(5).text();
+        var eventDetails = $(this).find('p').eq(6).text();
 
         $("#eventSummary").val(eventSummary);
         $("#emailList").val(emailList);
@@ -192,6 +203,7 @@
         $("#startTime").val(startTime);
         $("#endTime").val(endTime);
         $("#location").val(location);
+        $("#eventDetails").val(eventDetails);
         console.log(startDate);
       });
     });

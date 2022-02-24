@@ -34,6 +34,8 @@ public class CalendarEntry {
     private String eventLink;
     @Column(name="CreateDate")
     private String createDate;
+    @Column(name="EventDetails")
+    private String eventDetails;
 
     public final String getId(){
         return id;
@@ -113,5 +115,13 @@ public class CalendarEntry {
 
     public final void setEventLink(String eventLink){
         this.eventLink = eventLink;
+    }
+
+    public final String getEventDetails(){
+        return eventDetails;
+    }
+
+    public final void setEventDetails(String eventDetails){
+        this.eventDetails = eventDetails;
     }
 }

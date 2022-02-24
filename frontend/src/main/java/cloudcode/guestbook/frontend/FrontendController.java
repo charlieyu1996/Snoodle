@@ -81,7 +81,9 @@ public class FrontendController {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set("Content-Type", "application/json");
 
-        formMessage.setEventLink(formatCalendarURL(formMessage.getEventSummary(), formMessage.getStartDate(), formMessage.getEndDate(), "test charlie", "location", formMessage.getEmailList()));
+        formMessage.setEventLink(formatCalendarURL(formMessage.getEventSummary(), formMessage.getStartDate(), formMessage.getEndDate(), 
+                                                   formMessage.getStartTime(), formMessage.getEndTime(), formMessage.getEventDetails(), 
+                                                   formMessage.getLocation(), formMessage.getEmailList()));
         HttpEntity<CalendarEntry> httpEntity =
             new HttpEntity<CalendarEntry>(formMessage, httpHeaders);
         RestTemplate restTemplate = new RestTemplate();
@@ -183,16 +185,18 @@ public class FrontendController {
         return returnURL;
     }
 
-
-
     // helper that formats the calendar link url
-    private String formatCalendarURL(String text, String dateStart, String dateEnd, String details, String location, String add){
+    private String formatCalendarURL(String text, String dateStart, String dateEnd, String startTime, String endTime, String details, String location, String add){
         String newCalendarURL = calendarURL+ "?";
         String action = "TEMPLATE";
-        String dates = dateStart + "/" + dateEnd;
+        dateStart = dateStart.replace("-", "");
+        dateEnd = dateEnd.replace("-", "");
+        startTime = startTime.replace(":", "");
+        endTime = endTime.replace(":", "");
+        String dates = dateStart + "T" + startTime + "00Z+1" + "/" + dateEnd + "T" + endTime + "00Z" ;
         newCalendarURL += "action=" + action + "&";
         newCalendarURL += "text=" + text + "&";
-        newCalendarURL += "dates=" + "20201231T193000Z/20201231T223000Z" + "&";
+        newCalendarURL += "dates=" + dates + "&";
         newCalendarURL += "details=" + details + "&";
         newCalendarURL += "location=" + location + "&";
         newCalendarURL += "add=" + add;
