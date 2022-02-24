@@ -13,18 +13,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.Paths;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
-
-import org.apache.catalina.core.ApplicationPart;
-import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.http.HttpEntity;
 import org.springframework.web.client.RestTemplate;
 
@@ -36,7 +30,7 @@ import org.springframework.web.client.RestTemplate;
 public class FrontendController {
     private String backendUri = String.format("http://%s/messages2",
         System.getenv("GUESTBOOK_API_ADDR"));
-    private String backendUri2 = String.format("http://%s/speech",
+    private String speechUri = String.format("http://%s/speech",
         System.getenv("GUESTBOOK_API_ADDR"));
 
     private String calendarURL = "https://calendar.google.com/calendar/render";
@@ -121,17 +115,13 @@ public class FrontendController {
     public final String postRecord(HttpServletRequest req, HttpServletResponse res)
             throws URISyntaxException {
         String returnURL = "redirect:/Snoodle?";
-        URI url = new URI(backendUri2);
-
+        URI url = new URI(speechUri);
         try {
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.set("Content-Type", "application/json");
             Part filePart = req.getPart("audio_data");
-            String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString(); // MSIE fix.
             InputStream fileContent = filePart.getInputStream();
             byte[] targetArray = toByteArray(fileContent);
-            // byte[] targetArray = fileContent.readAllBytes();
-
 
             HttpEntity<byte[]> httpEntity = new HttpEntity<byte[]>(targetArray, httpHeaders);
             RestTemplate restTemplate = new RestTemplate();
@@ -142,46 +132,10 @@ public class FrontendController {
                 String value = eventData.get(key);
                 returnURL += key + "=" + value + "&";
             }
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (ServletException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
         }catch(Exception e) {
             e.printStackTrace();
             System.out.println("Error posting message to backend.");
         }
-        return returnURL;
-    }
-
-
-    // Obtains a hash table to pre-populate the input fields based on speech to text
-    @RequestMapping(value = "/get", method = RequestMethod.GET)
-    public final String get(final String formMessage)
-            throws URISyntaxException {
-        String returnURL = "redirect:/Snoodle?";
-        URI url = new URI(backendUri2);
-
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.set("Content-Type", "application/json");
-
-        RestTemplate restTemplate = new RestTemplate();
-        try {
-            Hashtable<String, String> eventData = restTemplate.getForObject(url, Hashtable.class);
-            Enumeration<String> e = eventData.keys();
-
-            while (e.hasMoreElements()) { 
-                String key = e.nextElement();
-                String value = eventData.get(key);
-                returnURL += key + "=" + value + "&";
-            }
-
-        } catch(Exception e) {
-            e.printStackTrace();
-            System.out.println("Error posting message to backend.");
-        }
-
         return returnURL;
     }
 

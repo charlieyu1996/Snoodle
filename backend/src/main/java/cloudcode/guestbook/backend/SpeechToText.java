@@ -1,16 +1,8 @@
 package cloudcode.guestbook.backend;
 
-import com.google.api.gax.rpc.ClientStream;
-import com.google.api.gax.rpc.ResponseObserver;
-import com.google.api.gax.rpc.StreamController;
 import com.google.cloud.speech.v1.RecognitionConfig;
 import com.google.cloud.speech.v1.SpeechClient;
 import com.google.cloud.speech.v1.SpeechRecognitionAlternative;
-import com.google.cloud.speech.v1.StreamingRecognitionConfig;
-import com.google.cloud.speech.v1.StreamingRecognitionResult;
-import com.google.cloud.speech.v1.StreamingRecognizeRequest;
-import com.google.cloud.speech.v1.StreamingRecognizeResponse;
-
 import com.google.api.gax.longrunning.OperationFuture;
 import com.google.api.gax.longrunning.OperationTimedPollAlgorithm;
 import com.google.api.gax.retrying.RetrySettings;
@@ -18,51 +10,19 @@ import com.google.api.gax.retrying.TimedRetryAlgorithm;
 import com.google.cloud.speech.v1.LongRunningRecognizeMetadata;
 import com.google.cloud.speech.v1.LongRunningRecognizeResponse;
 import com.google.cloud.speech.v1.RecognitionAudio;
-import com.google.cloud.speech.v1.RecognitionConfig.AudioEncoding;
 import com.google.cloud.speech.v1.SpeechRecognitionResult;
 import com.google.cloud.speech.v1.SpeechSettings;
-import com.google.protobuf.ByteString;
-import java.util.ArrayList;
 import java.util.List;
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.DataLine;
-import javax.sound.sampled.DataLine.Info;
-import javax.sound.sampled.TargetDataLine;
 import org.threeten.bp.Duration;
-
 import java.util.Calendar;
 import java.util.Hashtable;
-
 import java.time.format.DateTimeFormatter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 
+
 public class SpeechToText {
-    static boolean stopTranscribe;
-    static Hashtable<String, String> eventData;
-
-    public static void mainC(String[] args) {
-        String temp = "set event summary today is a good day " +
-                      "set email list charlie y u at gmail.com " +
-                      "set start date today " + 
-                      "set end date today " +
-                      "set start time 12:05 p.m. " +
-                      "set end time 3 p.m." +
-                      "set location waterloo";
-                      
-        // System.out.println(returnEventData(temp).toString());
-
-
-        try {
-            // streamingMicRecognize();
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
 
     public Hashtable<String, String> returnEventData(String data){
         Hashtable<String, String> eventData = new Hashtable<String, String>();
@@ -83,7 +43,6 @@ public class SpeechToText {
                 try {
                     currText = formatDate(currText.trim());
                 } catch (ParseException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
                 eventData.put("startDate", currText);
@@ -92,7 +51,6 @@ public class SpeechToText {
                 try {
                     currText = formatDate(currText.trim());
                 } catch (ParseException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
                 eventData.put("endDate", currText);
@@ -111,14 +69,6 @@ public class SpeechToText {
         }
         return eventData;
     }
-
-
-
-    public SpeechToText() {
-        stopTranscribe = false;
-        eventData = new Hashtable<String, String>();
-    }
-
 
     private String formatTime(String timeStr){
         timeStr = timeStr.trim();
@@ -248,127 +198,5 @@ public class SpeechToText {
             }
         }
         return returnString;
-    }
-
-    /**
-     * Performs microphone streaming speech recognition with a duration of 1 minute.
-     */
-    public String streamingMicRecognize() throws Exception {
-
-        ResponseObserver<StreamingRecognizeResponse> responseObserver = null;
-        try (SpeechClient client = SpeechClient.create()) {
-
-            responseObserver = new ResponseObserver<StreamingRecognizeResponse>() {
-                ArrayList<StreamingRecognizeResponse> responses = new ArrayList<>();
-
-                public void onStart(StreamController controller) {
-                }
-
-                public void onResponse(StreamingRecognizeResponse response) {
-                    StreamingRecognitionResult result = response.getResultsList().get(0);
-                    SpeechRecognitionAlternative alternative = result.getAlternativesList().get(0);
-                    if (alternative.getTranscript().contains("stop")) {
-                        stopTranscribe = true;
-                    } else if (alternative.getTranscript().trim().startsWith("set event summary")) {
-                        String currText = alternative.getTranscript();
-                        currText = currText.substring(18, currText.length());
-                        eventData.put("eventSummary", currText);
-                        System.out.printf("During Transcript event summary : %s\n", currText);
-                    } else if (alternative.getTranscript().trim().startsWith("set email list")) {
-                        String currText = alternative.getTranscript();
-                        currText = currText.substring(15, currText.length());
-                        currText = formatEmailList(currText);
-                        eventData.put("emailList", currText);
-                        System.out.printf("During Transcript email list : %s\n", currText);
-                    } else if (alternative.getTranscript().trim().startsWith("set date")) {
-                        String currText = alternative.getTranscript();
-                        currText = currText.substring(9, currText.length());
-                        try {
-                            currText = formatDate(currText.trim());
-                        } catch (ParseException e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
-                        }
-                        eventData.put("date", currText);
-                        System.out.printf("During Transcript date : %s\n", currText);
-                    }
-                    System.out.printf("During Transcript : %s\n", alternative.getTranscript());
-                    responses.add(response);
-                }
-
-                public void onComplete() {
-                    for (StreamingRecognizeResponse response : responses) {
-                        StreamingRecognitionResult result = response.getResultsList().get(0);
-                        SpeechRecognitionAlternative alternative = result.getAlternativesList().get(0);
-                        System.out.printf("Transcript : %s\n", alternative.getTranscript());
-                    }
-                }
-
-                public void onError(Throwable t) {
-                    System.out.println(t);
-                }
-            };
-
-            ClientStream<StreamingRecognizeRequest> clientStream = client.streamingRecognizeCallable()
-                    .splitCall(responseObserver);
-
-            RecognitionConfig recognitionConfig = RecognitionConfig.newBuilder()
-                    .setEncoding(RecognitionConfig.AudioEncoding.LINEAR16)
-                    .setLanguageCode("en-US")
-                    .setSampleRateHertz(16000)
-                    .build();
-            StreamingRecognitionConfig streamingRecognitionConfig = StreamingRecognitionConfig.newBuilder()
-                    .setConfig(recognitionConfig).build();
-
-            StreamingRecognizeRequest request = StreamingRecognizeRequest.newBuilder()
-                    .setStreamingConfig(streamingRecognitionConfig)
-                    .build(); // The first request in a streaming call has to be a config
-
-            clientStream.send(request);
-            // SampleRate:16000Hz, SampleSizeInBits: 16, Number of channels: 1, Signed:
-            // true,
-            // bigEndian: false
-            AudioFormat audioFormat = new AudioFormat(16000, 16, 1, true, false);
-            DataLine.Info targetInfo = new Info(
-                    TargetDataLine.class,
-                    audioFormat); // Set the system information to read from the microphone audio stream
-
-            if (!AudioSystem.isLineSupported(targetInfo)) {
-                System.out.println("Microphone not supported");
-                return "Microphone not supported";
-            }
-            // Target data line captures the audio stream the microphone produces.
-            TargetDataLine targetDataLine = (TargetDataLine) AudioSystem.getLine(targetInfo);
-            targetDataLine.open(audioFormat);
-            targetDataLine.start();
-            System.out.println("Start speaking");
-            long startTime = System.currentTimeMillis();
-            // Audio Input Stream
-            AudioInputStream audio = new AudioInputStream(targetDataLine);
-            stopTranscribe = false;
-            eventData = new Hashtable<String, String>();
-            while (true) {
-                long estimatedTime = System.currentTimeMillis() - startTime;
-                byte[] data = new byte[6400];
-                audio.read(data);
-                if (estimatedTime > 60000 || stopTranscribe) { // 60 seconds
-                    if (stopTranscribe)
-                        System.out.println("Stopped early");
-                    System.out.println("Stop speaking.");
-                    targetDataLine.stop();
-                    targetDataLine.close();
-                    break;
-                }
-                request = StreamingRecognizeRequest.newBuilder()
-                        .setAudioContent(ByteString.copyFrom(data))
-                        .build();
-                clientStream.send(request);
-            }
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-        responseObserver.onComplete();
-
-        return eventData.toString();
     }
 }

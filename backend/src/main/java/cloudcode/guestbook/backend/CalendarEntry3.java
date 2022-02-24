@@ -1,11 +1,5 @@
 package cloudcode.guestbook.backend;
 
-import lombok.Data;
-
-import com.google.cloud.spring.data.spanner.core.mapping.Column;
-import com.google.cloud.spring.data.spanner.core.mapping.PrimaryKey;
-import com.google.cloud.spring.data.spanner.core.mapping.Table;
-
 /**
  * defines the data associated with a single guest book entry
  */
