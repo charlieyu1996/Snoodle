@@ -28,7 +28,8 @@ public class BackendController {
 
     @GetMapping("/messages2")
     public List<CalendarEntry> getEvents() {
-      return (List<CalendarEntry>) eventRepository.findAll();
+      return (List<CalendarEntry>)  eventRepository.findAll(Sort.by(Sort.Direction.DESC, "CreateDate"));
+      //return (List<CalendarEntry>) eventRepository.findAll();
     }
 
     @PostMapping("/messages2")
