@@ -65,6 +65,9 @@ public class SpeechToText {
             }else if (currText.startsWith("location")){
                 currText = currText.substring(9, currText.length());
                 eventData.put("location", currText);
+            }else if (currText.startsWith("event details")){
+                currText = currText.substring(14, currText.length());
+                eventData.put("eventDetails", currText);
             }
         }
         return eventData;
@@ -174,7 +177,6 @@ public class SpeechToText {
             // Configure remote file request for FLAC
             RecognitionConfig config = RecognitionConfig.newBuilder()
                     .setLanguageCode("en-US")
-                    .setSampleRateHertz(48000)
                     .build();
             RecognitionAudio audio = RecognitionAudio.newBuilder().setUri(gcsUri).build();
 
