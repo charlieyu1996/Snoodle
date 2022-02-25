@@ -6,4 +6,5 @@ import org.springframework.stereotype.*;
 
 @Repository
 public interface EventRepository extends SpannerRepository<CalendarEntry, String> {
+    long deleteByCreateDate (String createDate);
 }

@@ -30,6 +30,8 @@ import org.springframework.web.client.RestTemplate;
 public class FrontendController {
     private String backendUri = String.format("http://%s/messages2",
         System.getenv("GUESTBOOK_API_ADDR"));
+    private String backendUriDelete = String.format("http://%s/deleteEvent",
+        System.getenv("GUESTBOOK_API_ADDR"));
     private String speechUri = String.format("http://%s/speech",
         System.getenv("GUESTBOOK_API_ADDR"));
 
@@ -85,12 +87,31 @@ public class FrontendController {
             restTemplate.postForObject(url, httpEntity, String.class);
         } catch(Exception e) {
             e.printStackTrace();
-            System.out.println("Error posting message to backend.");
+            System.out.println("Error posting event to backend.");
         }
 
         return "redirect:/Snoodle";
     }
 
+    @RequestMapping(value = "/postDelete", method = RequestMethod.POST)
+    public final String postDelete(String createDate)
+            throws URISyntaxException {
+        URI url = new URI(backendUriDelete);
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.set("Content-Type", "application/json");
+        HttpEntity<String> httpEntity =
+            new HttpEntity<String>(createDate, httpHeaders);
+        RestTemplate restTemplate = new RestTemplate();
+        try {
+            restTemplate.postForObject(url, httpEntity, String.class);
+        } catch(Exception e) {
+            e.printStackTrace();
+            System.out.println("Error deleting event to backend.");
+        }
+
+        return "redirect:/Snoodle";
+    }
 
     public static byte[] toByteArray(InputStream in) throws IOException
     {
@@ -134,7 +155,7 @@ public class FrontendController {
             }
         }catch(Exception e) {
             e.printStackTrace();
-            System.out.println("Error posting message to backend.");
+            System.out.println("Error posting event to backend.");
         }
         return returnURL;
     }

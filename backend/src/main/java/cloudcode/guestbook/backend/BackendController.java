@@ -11,16 +11,17 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.UUID;
 
-
 /**
  * defines the REST endpoints managed by the server.
  */
 @RestController
 public class BackendController {
 
-   @Autowired private MessageRepository repository;
+    @Autowired
+    private MessageRepository repository;
 
-   @Autowired private EventRepository eventRepository;
+    @Autowired
+    private EventRepository eventRepository;
 
     BackendController(EventRepository eventRepository) {
         this.eventRepository = eventRepository;
@@ -28,22 +29,33 @@ public class BackendController {
 
     @GetMapping("/messages2")
     public List<CalendarEntry> getEvents() {
-      return (List<CalendarEntry>)  eventRepository.findAll(Sort.by(Sort.Direction.DESC, "CreateDate"));
-      //return (List<CalendarEntry>) eventRepository.findAll();
+        return (List<CalendarEntry>) eventRepository.findAll(Sort.by(Sort.Direction.DESC, "CreateDate"));
+        // return (List<CalendarEntry>) eventRepository.findAll();
     }
 
     @PostMapping("/messages2")
     public String createEvent(@RequestBody CalendarEntry event) {
-            // Spanner currently does not auto generate IDs
-            // Generate UUID on new orders
-            event.setId(UUID.randomUUID().toString());
-            event.setCreateDate(Long.toString(System.currentTimeMillis()));
-      CalendarEntry saved = eventRepository.save(event);
-      return saved.getId();
+        // Spanner currently does not auto generate IDs
+        // Generate UUID on new orders
+        event.setId(UUID.randomUUID().toString());
+        event.setCreateDate(Long.toString(System.currentTimeMillis()));
+        CalendarEntry saved = eventRepository.save(event);
+        return saved.getId();
+    }
+
+    @PostMapping("/deleteEvent")
+    public String deleteEvent(@RequestBody String createDate) {
+        try{
+            eventRepository.deleteByCreateDate(createDate);
+        }catch (Exception e){
+            return "Deletion failed"
+        }
+        return "Event deleted";
     }
 
     /**
      * endpoint for retrieving all guest book entries stored in database
+     * 
      * @return a list of GuestBookEntry objects
      */
     @GetMapping("/messages")
@@ -55,6 +67,7 @@ public class BackendController {
 
     /**
      * endpoint for adding a new guest book entry to the database
+     * 
      * @param message a message object passed in the HTTP POST request
      */
     @PostMapping("/messages")
@@ -63,10 +76,11 @@ public class BackendController {
         repository.save(message);
     }
 
-    // post that saves voice to cloud storage and uses speech to text to return a hash
+    // post that saves voice to cloud storage and uses speech to text to return a
+    // hash
     @PostMapping("/speech")
-    public final Hashtable<String, String> setSpeechFile(@RequestBody byte[] audio){
-        Hashtable<String, String> eventData = new Hashtable<String, String> ();
+    public final Hashtable<String, String> setSpeechFile(@RequestBody byte[] audio) {
+        Hashtable<String, String> eventData = new Hashtable<String, String>();
         try {
             CloudStorage cs = new CloudStorage();
             cs.uploadObject("charliyu-demo", "snoodle-voice", "webVoice.flac", audio);
