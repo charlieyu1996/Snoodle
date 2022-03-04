@@ -19,9 +19,14 @@
   <div class="header">
     <div class="container">
       <h1>
-        <a href="/Snoodle">
-          Snoodle
-        </a>
+        <a style="color:#4285F4" href="/Snoodle">S</a>
+        <a style="color:#DB4437" href="/Snoodle">n</a>
+        <a style="color:#F4B400" href="/Snoodle">o</a>
+        <a style="color:#0F9D58" href="/Snoodle">o</a>
+        <a style="color:#4285F4" href="/Snoodle">d</a>
+        <a style="color:#DB4437" href="/Snoodle">l</a>
+        <a style="color:#F4B400" href="/Snoodle">e</a>
+
       </h1>
       <a href="https://github.com/charlieyu1996/Snoodle"
         class="text-muted">View on GitHub</a>
@@ -126,6 +131,7 @@
         <h6 class="card-subtitle mb-2 text-muted"
           th:text="${T(cloudcode.guestbook.frontend.PrintDuration).print(m.createDate)}">Create Date</h6>
         <br><br>
+
         <h7>Email List</h7>
         <label class="sr-only" for="guestList">emailList</label>
         <p class="card-text" id="emailList" name="emailList" th:text="${m.emailList}">Email List</p>
@@ -134,9 +140,9 @@
         <h7>End Date</h7>
         <p class="card-text" th:text="${m.endDate}">End Date</p>
         <h7>Start Time</h7>
-        <p class="card-text" th:text="${m.startTime}">Start Time</p>
+        <p class="card-text" th:text="${m.startTime}">Start Time (24 hour format)</p>
         <h7>End Time</h7>
-        <p class="card-text" th:text="${m.endTime}">End Time</p>
+        <p class="card-text" th:text="${m.endTime}">End Time (24 hour format)</p>
         <h7>Location</h7>
         <p class="card-text" th:text="${m.location}">Location</p>
         <h7 th:if="${m.eventDetails!=null}">Event Details</h7>
@@ -155,40 +161,22 @@
 
 
   <script>
+    function randomIntFromInterval(min, max) { // min and max included 
+      return Math.floor(Math.random() * (max - min + 1) + min)
+    }
 
-    // const queryString = window.location.search;
-    // const urlParams = new URLSearchParams(queryString);
-    // const eventSummary = urlParams.get('eventSummary');
-    // const emailList = urlParams.get('emailList');
-    // const startDate = urlParams.get('startDate');
-    // const endDate = urlParams.get('endDate');
-    // const startTime = urlParams.get('startTime');
-    // const endTime = urlParams.get('endTime');
-    // const location2 = urlParams.get('location');
-    // if (eventSummary != null && eventSummary.length > 0) {
-    //   $("#eventSummary").val(eventSummary);
-    // }
-    // if (emailList != null && emailList.length > 0) {
-    //   $("#emailList").val(emailList);
-    // }
-    // if (startDate != null && startDate.length > 0) {
-    //   $("#startDate").val(startDate);
-    // }
-    // if (endDate != null && endDate.length > 0) {
-    //   $("#endDate").val(endDate);
-    // }
-    // if (startTime != null && startTime.length > 0) {
-    //   $("#startTime").val(startTime);
-    // }
-    // if (endTime != null && endTime.length > 0) {
-    //   $("#endTime").val(endTime);
-    // }
-    // if (location2 != null && location2.length > 0) {
-    //   $("#location").val(location2);
-    // }
-
+    const rndInt = randomIntFromInterval(1, 4)
 
     var currColor = 'blue';
+    if (rndInt == 1){
+      currColor = 'blue';
+    }else if (rndInt == 2){
+      currColor = 'red';
+    }else if (rndInt == 3){
+      currColor = 'yellow';
+    }else{
+      currColor = 'green';
+    }
     $(".card").each(function (i, obj) {
       $(this).addClass(currColor);
       if (currColor == 'blue'){
