@@ -48,7 +48,7 @@ public class BackendController {
         try{
             eventRepository.deleteByCreateDate(createDate);
         }catch (Exception e){
-            return "Deletion failed"
+            return "Deletion failed";
         }
         return "Event deleted";
     }
