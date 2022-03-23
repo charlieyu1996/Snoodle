@@ -1,9 +1,9 @@
-package cloudcode.guestbook.backend;
+// package cloudcode.guestbook.backend;
 
-import org.springframework.data.mongodb.repository.MongoRepository;
+// import org.springframework.data.mongodb.repository.MongoRepository;
 
-/**
- * represents a custom Mongo repository that stores GuestBookEntry objects
- */
-public interface MessageRepository extends
-    MongoRepository<CalendarEntry3, String> { }
+// /**
+//  * represents a custom Mongo repository that stores GuestBookEntry objects
+//  */
+// public interface MessageRepository extends
+//     MongoRepository<CalendarEntry3, String> { }

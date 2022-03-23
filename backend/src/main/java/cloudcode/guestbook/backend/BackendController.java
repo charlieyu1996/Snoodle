@@ -17,8 +17,8 @@ import java.util.UUID;
 @RestController
 public class BackendController {
 
-    @Autowired
-    private MessageRepository repository;
+    // @Autowired
+    // private MessageRepository repository;
 
     @Autowired
     private EventRepository eventRepository;
@@ -58,23 +58,23 @@ public class BackendController {
      * 
      * @return a list of GuestBookEntry objects
      */
-    @GetMapping("/messages")
-    public final List<CalendarEntry3> getMessages() {
-        Sort byCreation = Sort.by(Sort.Direction.DESC, "_id");
-        List<CalendarEntry3> msgList = repository.findAll(byCreation);
-        return msgList;
-    }
+    // @GetMapping("/messages")
+    // public final List<CalendarEntry3> getMessages() {
+    //     Sort byCreation = Sort.by(Sort.Direction.DESC, "_id");
+    //     List<CalendarEntry3> msgList = repository.findAll(byCreation);
+    //     return msgList;
+    // }
 
     /**
      * endpoint for adding a new guest book entry to the database
      * 
      * @param message a message object passed in the HTTP POST request
      */
-    @PostMapping("/messages")
-    public final void addMessage(@RequestBody CalendarEntry3 message) {
-        message.setCreateDate(System.currentTimeMillis());
-        repository.save(message);
-    }
+    // @PostMapping("/messages")
+    // public final void addMessage(@RequestBody CalendarEntry3 message) {
+    //     message.setCreateDate(System.currentTimeMillis());
+    //     repository.save(message);
+    // }
 
     // post that saves voice to cloud storage and uses speech to text to return a
     // hash
